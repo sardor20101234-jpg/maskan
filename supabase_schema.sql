@@ -4,10 +4,10 @@
 -- 1. Profiles Table (Extends Supabase Auth)
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
-  name TEXT NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('teacher', 'student')),
-  avatar TEXT,
+  name TEXT,
+  username TEXT UNIQUE,
+  email TEXT,
+  role TEXT CHECK (role IN ('student', 'teacher')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

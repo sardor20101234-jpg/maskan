@@ -47,7 +47,23 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const login = async (email, password) => {
+  const login = async (identifier, password) => {
+    let email = identifier;
+
+    // If identifier doesn't look like an email, assume it's a username
+    if (!identifier.includes('@')) {
+      const { data, error: profileError } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('username', identifier)
+        .single();
+      
+      if (profileError || !data) {
+        throw new Error('User not found with this username.');
+      }
+      email = data.email;
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -63,22 +79,22 @@ export function AuthProvider({ children }) {
     return { ...data.user, ...profile };
   };
 
-  const register = async (name, email, password, role) => {
+  const register = async (name, username, email, password, role) => {
+    // We pass name, username, and role as metadata so the Trigger can find them
     const { data: { user: sbUser }, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          name: name,
+          username: username,
+          role: role
+        }
+      }
     });
+
     if (signUpError) throw signUpError;
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .insert([{ id: sbUser.id, name, email, role }])
-      .select()
-      .single();
-    
-    if (profileError) throw profileError;
-
-    return { ...sbUser, ...profile };
+    return sbUser;
   };
 
   const logout = async () => {

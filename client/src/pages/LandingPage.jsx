@@ -72,10 +72,10 @@ export default function LandingPage() {
         <div className={`max-w-7xl mx-auto glass rounded-2xl px-4 sm:px-6 h-16 flex items-center justify-between shadow-lg shadow-slate-900/5 transition-all duration-500 ${isScrolled ? 'rounded-xl shadow-xl' : 'rounded-2xl'}`}>
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <span className="text-white font-bold text-base">E</span>
+              <span className="text-white font-bold text-base">M</span>
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-indigo-700 to-indigo-900 bg-clip-text text-transparent">
-              EduClass
+              Maskan
             </span>
           </div>
 
@@ -168,7 +168,7 @@ export default function LandingPage() {
               <h3 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight mb-6">
                 Your Classroom, <br /> Organized & <span className="text-indigo-600">Efficient.</span>
               </h3>
-              <p className="text-lg text-slate-600 leading-relaxed mb-8">Say goodbye to fragmented tools. EduClass brings together course materials, announcements, and grading in a single interface.</p>
+              <p className="text-lg text-slate-600 leading-relaxed mb-8">Say goodbye to fragmented tools. Maskan brings together course materials, announcements, and grading in a single interface.</p>
               <div className="space-y-6">
                 {[
                   { title: 'One-Click Enrollment', desc: 'Students can join with a code or through the course marketplace.' },
@@ -309,7 +309,7 @@ export default function LandingPage() {
               <h3 className="text-3xl font-black text-slate-900 mb-6">Get in <span className="text-indigo-600">Touch.</span></h3>
               <p className="text-slate-500 mb-8">Revolutionize your classroom today.</p>
               <div className="space-y-4 font-semibold text-slate-700">
-                <p>📧 support@educlass.com</p>
+                <p>📧 support@maskan.com</p>
                 <p>📞 +1 (555) 000-EDU</p>
               </div>
             </div>
@@ -329,8 +329,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-1 md:col-span-2 text-left">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-black">E</div>
-                <span className="text-2xl font-black">EduClass</span>
+                <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-black">M</div>
+                <span className="text-2xl font-black">Maskan</span>
               </div>
               <p className="text-indigo-100/60 text-lg">Empowering the next generation of educators.</p>
             </div>
@@ -342,7 +342,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="pt-12 border-t border-slate-800 flex justify-between text-slate-500 text-sm">
-            <p>© 2026 EduClass Platform. All rights reserved.</p>
+            <p>© 2026 Maskan Platform. All rights reserved.</p>
             <div className="flex gap-8"><span>Privacy</span><span>Terms</span></div>
           </div>
         </div>

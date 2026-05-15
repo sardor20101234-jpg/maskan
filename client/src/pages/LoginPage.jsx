@@ -2,77 +2,127 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const INTERESTING_FACTS = [
+  "Did you know? Humans share about 50% of their DNA with bananas!",
+  "A group of flamingos is called a 'flamboyance'.",
+  "Octopuses have three hearts and blue blood.",
+  "The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion.",
+  "Maskan means 'Home' - let this be your home for learning."
+];
+
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const fact = INTERESTING_FACTS[Math.floor(Math.random() * INTERESTING_FACTS.length)];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const user = await login(email, password);
+      const user = await login(identifier, password);
       navigate(user.role === 'teacher' ? '/teacher' : '/student');
     } catch (err) {
-      setError(err.message || 'Login failed.');
+      setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
   };
 
-  const fillDemo = (role) => {
-    setEmail(role === 'teacher' ? 'teacher@educlass.com' : 'student@educlass.com');
-    setPassword(role === 'teacher' ? 'teacher123' : 'student123');
-  };
-
   return (
-    <div className="min-h-screen flex">
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-md animate-fade-in-up">
-          <Link to="/" className="flex items-center gap-2 mb-10">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/25">
-              <span className="text-white font-bold text-lg">E</span>
-            </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">EduClass</span>
-          </Link>
-          <h1 className="text-3xl font-bold text-surface-900 mb-2">Welcome back</h1>
-          <p className="text-surface-500 mb-8">Sign in to continue to your dashboard</p>
-          {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl">{error}</div>}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-surface-700 mb-2">Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-surface-900" />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-surface-700 mb-2">Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-surface-900" />
-            </div>
-            <button type="submit" disabled={loading} className="w-full py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-primary-500/25 transition-all disabled:opacity-50">
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
-          <div className="mt-6 pt-6 border-t border-surface-200">
-            <p className="text-xs font-medium text-surface-400 text-center mb-3">Quick demo access</p>
-            <div className="flex gap-3">
-              <button onClick={() => fillDemo('teacher')} className="flex-1 py-2.5 bg-amber-50 text-amber-700 text-sm font-semibold rounded-xl border border-amber-200 hover:bg-amber-100 transition-colors">👩‍🏫 Teacher</button>
-              <button onClick={() => fillDemo('student')} className="flex-1 py-2.5 bg-emerald-50 text-emerald-700 text-sm font-semibold rounded-xl border border-emerald-200 hover:bg-emerald-100 transition-colors">🎓 Student</button>
-            </div>
-          </div>
-          <p className="mt-8 text-center text-sm text-surface-500">
-            Don't have an account? <Link to="/register" className="font-semibold text-primary-600 hover:text-primary-700">Sign up free</Link>
+    <div className="min-h-screen flex bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-800">
+      {/* Left Content */}
+      <div className="hidden lg:flex flex-1 items-center justify-center p-12 text-white relative">
+        <div className="absolute top-12 left-12 flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center font-bold text-xl">M</div>
+          <span className="text-2xl font-black tracking-tight">Maskan</span>
+        </div>
+        
+        <div className="max-w-md text-center">
+          <div className="text-8xl mb-8 animate-float">🚀</div>
+          <h2 className="text-4xl font-bold mb-6">Welcome Back</h2>
+          <p className="text-indigo-100 text-xl font-medium leading-relaxed italic opacity-90">
+            "{fact}"
           </p>
         </div>
       </div>
-      <div className="hidden lg:flex flex-1 items-center justify-center bg-gradient-to-br from-primary-600 via-primary-700 to-purple-800 relative overflow-hidden">
-        <div className="absolute top-20 left-20 w-80 h-80 rounded-full bg-white/10 blur-3xl" />
-        <div className="text-center text-white p-12 relative">
-          <div className="text-7xl mb-6 animate-float">📚</div>
-          <h2 className="text-3xl font-bold mb-4">Your Classroom, Reimagined</h2>
-          <p className="text-primary-100 text-lg max-w-md">Create, teach, and manage courses with a platform built for modern education.</p>
+
+      {/* Right Form Panel */}
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+        <div className="w-full max-w-md bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 animate-fade-in-up border border-white/20">
+          <div className="lg:hidden mb-8 flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">M</div>
+            <span className="text-xl font-bold text-surface-900">Maskan</span>
+          </div>
+          
+          <h1 className="text-3xl font-bold text-surface-900 mb-2">Sign In</h1>
+          <p className="text-surface-500 mb-8">Access your personalized dashboard</p>
+          
+          {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-xs rounded-2xl animate-shake">{error}</div>}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider mb-1.5 ml-1">Email or Username</label>
+              <input 
+                type="text" 
+                value={identifier} 
+                onChange={(e) => setIdentifier(e.target.value)} 
+                placeholder="you@example.com or username" 
+                required 
+                className="w-full px-5 py-3.5 bg-surface-50 border border-surface-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-surface-900 text-sm" 
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-1.5 ml-1">
+                <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Password</label>
+                <button type="button" onClick={() => alert('Password reset feature coming soon!')} className="text-[10px] font-bold text-primary-600 hover:underline uppercase tracking-wide">Forgot?</button>
+              </div>
+              <div className="relative">
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="••••••••" 
+                  required 
+                  className="w-full px-5 py-3.5 bg-surface-50 border border-surface-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-surface-900 text-sm" 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 hover:text-primary-500 transition-colors"
+                >
+                  {showPassword ? '👁️' : '🕶️'}
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex items-center">
+              <input 
+                id="remember-me" 
+                type="checkbox" 
+                checked={rememberMe} 
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-primary-600 bg-surface-50 border-surface-300 rounded focus:ring-primary-500 focus:ring-2" 
+              />
+              <label htmlFor="remember-me" className="ml-2 text-sm font-medium text-surface-600 cursor-pointer">Remember me</label>
+            </div>
+
+            <button type="submit" disabled={loading} className="w-full py-4 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 shadow-xl shadow-primary-500/20 transition-all disabled:opacity-50 text-sm tracking-wide">
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          <p className="mt-8 text-center text-sm text-surface-500 font-medium">
+            Don't have an account? <Link to="/register" className="text-primary-600 hover:underline">Create one free</Link>
+          </p>
         </div>
       </div>
     </div>
