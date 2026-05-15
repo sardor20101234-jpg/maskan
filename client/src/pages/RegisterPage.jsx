@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const INTERESTING_FACTS = [
-  "Did you know? The first school in the world was established in 1088!",
-  "A single teacher can inspire thousands of students throughout their career.",
-  "Learning something new every day keeps your brain sharp and healthy.",
   "Knowledge is the only treasure that grows when shared with others.",
-  "Maskan is your digital home for education and growth."
+  "Maskan is your digital home for education and personal growth.",
+  "The first school in the world was established in 1088 in Bologna, Italy.",
+  "A single teacher can inspire thousands of students throughout their lifetime.",
+  "Learning something new every day keeps your brain sharp and healthy.",
+  "The word 'Maskan' means 'Home' or 'Abode' in Arabic."
 ];
 
 export default function RegisterPage() {
@@ -20,9 +21,32 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [factIndex, setFactIndex] = useState(0);
+  const [animateFact, setAnimateFact] = useState(true);
   const { register } = useAuth();
+  
+  const bgRef = useRef(null);
 
-  const fact = INTERESTING_FACTS[Math.floor(Math.random() * INTERESTING_FACTS.length)];
+  // Rotate facts every 40 seconds with animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimateFact(false);
+      setTimeout(() => {
+        setFactIndex((prev) => (prev + 1) % INTERESTING_FACTS.length);
+        setAnimateFact(true);
+      }, 500); // Wait for slide down animation
+    }, 40000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Cursor follow effect
+  const handleMouseMove = (e) => {
+    if (!bgRef.current) return;
+    const { clientX, clientY } = e;
+    const moveX = (clientX - window.innerWidth / 2) / 30;
+    const moveY = (clientY - window.innerHeight / 2) / 30;
+    bgRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,93 +81,119 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-800">
-      {/* Left Content */}
-      <div className="hidden lg:flex flex-1 items-center justify-center p-12 text-white relative">
-        <div className="absolute top-12 left-12 flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center font-bold text-xl">M</div>
-          <span className="text-2xl font-black tracking-tight">Maskan</span>
-        </div>
-        
-        <div className="max-w-md text-center">
-          <div className="text-8xl mb-8 animate-float">🌟</div>
-          <h2 className="text-4xl font-bold mb-6">Join Maskan Today</h2>
-          <p className="text-indigo-100 text-xl font-medium leading-relaxed italic opacity-90">
-            "{fact}"
-          </p>
-        </div>
+    <div onMouseMove={handleMouseMove} className="min-h-screen flex relative overflow-hidden bg-[#0a0a1f]">
+      {/* Dynamic Background with Mouse Follow */}
+      <div 
+        ref={bgRef}
+        className="absolute inset-0 z-0 transition-transform duration-300 ease-out opacity-40"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'hue-rotate(220deg) saturate(1.5)',
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a1f] via-transparent to-[#1a1a3a]" />
       </div>
 
-      {/* Right Form Panel */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
-        <div className="w-full max-w-md bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 animate-fade-in-up border border-white/20">
-          <div className="lg:hidden mb-8 flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold">M</div>
-            <span className="text-xl font-bold text-surface-900">Maskan</span>
+      {/* Content Wrapper */}
+      <div className="relative z-10 w-full flex min-h-screen">
+        {/* Left Content */}
+        <div className="hidden lg:flex flex-1 items-center justify-center p-12 text-white">
+          <div className="absolute top-12 left-12 flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center font-bold text-xl border border-white/20">M</div>
+            <span className="text-2xl font-black tracking-tight text-white/90">Maskan</span>
           </div>
           
-          <h1 className="text-3xl font-bold text-surface-900 mb-2">Create Account</h1>
-          <p className="text-surface-500 mb-8">Ready to start your journey?</p>
-          
-          {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-xs rounded-2xl animate-shake">{error}</div>}
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <button type="button" onClick={() => setRole('student')} className={`py-3 rounded-xl border-2 font-semibold text-xs transition-all ${role === 'student' ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-surface-100 text-surface-500 hover:border-surface-200'}`}>
-                🎓 Student
-              </button>
-              <button type="button" onClick={() => setRole('teacher')} className={`py-3 rounded-xl border-2 font-semibold text-xs transition-all ${role === 'teacher' ? 'border-amber-400 bg-amber-50 text-amber-700' : 'border-surface-100 text-surface-500 hover:border-surface-200'}`}>
-                👩‍🏫 Teacher
-              </button>
+          <div className="max-w-md text-center">
+            <h2 className="text-5xl font-black mb-8 tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent">
+              Join Maskan
+            </h2>
+            <div className="h-24 overflow-hidden relative">
+              <p className={`text-xl font-medium leading-relaxed italic opacity-80 transition-all duration-700 absolute inset-0 ${
+                animateFact ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+              }`}>
+                "{INTERESTING_FACTS[factIndex]}"
+              </p>
             </div>
+          </div>
+        </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider mb-1.5 ml-1">Full Name</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" required className="w-full px-5 py-3.5 bg-surface-50 border border-surface-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-surface-900 text-sm" />
+        {/* Right Form Panel */}
+        <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+          <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 border border-white/10">
+            <div className="lg:hidden mb-8 flex items-center gap-2">
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-white font-bold">M</div>
+              <span className="text-xl font-bold text-white">Maskan</span>
+            </div>
+            
+            <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
+            <p className="text-white/50 mb-8 font-medium">Ready to start your journey?</p>
+            
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-200 text-xs rounded-2xl animate-shake">
+                {error}
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <button type="button" onClick={() => setRole('student')} className={`py-3 rounded-xl border font-bold text-xs transition-all ${role === 'student' ? 'bg-white text-indigo-900 border-white' : 'bg-transparent text-white border-white/20 hover:border-white/40'}`}>
+                  Student
+                </button>
+                <button type="button" onClick={() => setRole('teacher')} className={`py-3 rounded-xl border font-bold text-xs transition-all ${role === 'teacher' ? 'bg-white text-indigo-900 border-white' : 'bg-transparent text-white border-white/20 hover:border-white/40'}`}>
+                  Teacher
+                </button>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider mb-1.5 ml-1">Username</label>
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="johndoe123" required className="w-full px-5 py-3.5 bg-surface-50 border border-surface-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-surface-900 text-sm" />
-              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5 ml-1">Full Name</label>
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" required className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/10 transition-all text-white text-sm placeholder:text-white/20" />
+                </div>
 
-              <div>
-                <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider mb-1.5 ml-1">Email</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required className="w-full px-5 py-3.5 bg-surface-50 border border-surface-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-surface-900 text-sm" />
-              </div>
+                <div>
+                  <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5 ml-1">Username</label>
+                  <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/10 transition-all text-white text-sm placeholder:text-white/20" />
+                </div>
 
-              <div>
-                <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider mb-1.5 ml-1">Password</label>
-                <div className="relative">
-                  <input 
-                    type={showPassword ? 'text' : 'password'} 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    placeholder="••••••••" 
-                    required 
-                    minLength={6}
-                    className="w-full px-5 py-3.5 bg-surface-50 border border-surface-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-surface-900 text-sm" 
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400 hover:text-primary-500 transition-colors"
-                  >
-                    {showPassword ? '👁️' : '🕶️'}
-                  </button>
+                <div>
+                  <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5 ml-1">Email</label>
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" required className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/10 transition-all text-white text-sm placeholder:text-white/20" />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-1.5 ml-1">Password</label>
+                  <div className="relative">
+                    <input 
+                      type={showPassword ? 'text' : 'password'} 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                      placeholder="••••••••" 
+                      required 
+                      minLength={6}
+                      className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/20 focus:bg-white/10 transition-all text-white text-sm placeholder:text-white/20" 
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <button type="submit" disabled={loading} className="w-full py-4 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 shadow-xl shadow-primary-500/20 transition-all disabled:opacity-50 mt-4 text-sm tracking-wide">
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
-          </form>
+              <button type="submit" disabled={loading} className="w-full py-4 bg-white text-indigo-900 font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 mt-4 text-xs uppercase tracking-widest shadow-xl shadow-white/5">
+                {loading ? 'Processing...' : 'Create Account'}
+              </button>
+            </form>
 
-          <p className="mt-8 text-center text-sm text-surface-500 font-medium">
-            Already have an account? <Link to="/login" className="text-primary-600 hover:underline">Sign in</Link>
-          </p>
+            <p className="mt-8 text-center text-sm text-white/50 font-medium">
+              Already have an account? <Link to="/login" className="text-white hover:underline">Sign in</Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
