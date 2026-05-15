@@ -71,9 +71,7 @@ export default function LandingPage() {
       <header className={`fixed left-4 right-4 z-50 transition-all duration-300 ${isScrolled ? 'top-2' : 'top-4'}`}>
         <div className={`max-w-7xl mx-auto glass rounded-2xl px-4 sm:px-6 h-16 flex items-center justify-between shadow-lg shadow-slate-900/5 transition-all duration-500 ${isScrolled ? 'rounded-xl shadow-xl' : 'rounded-2xl'}`}>
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <span className="text-white font-bold text-base">M</span>
-            </div>
+            <img src="/logo.png" alt="Maskan Logo" className="w-10 h-10 object-contain drop-shadow-md" />
             <span className="text-xl font-bold bg-gradient-to-r from-indigo-700 to-indigo-900 bg-clip-text text-transparent">
               Maskan
             </span>
@@ -329,8 +327,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-1 md:col-span-2 text-left">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-black">M</div>
-                <span className="text-2xl font-black">Maskan</span>
+                <img src="/logo.png" alt="Maskan Logo" className="w-12 h-12 object-contain" />
+                <span className="text-2xl font-black text-white">Maskan</span>
               </div>
               <p className="text-indigo-100/60 text-lg">Empowering the next generation of educators.</p>
             </div>

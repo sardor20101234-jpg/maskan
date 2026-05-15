@@ -81,7 +81,7 @@ export default function LoginPage() {
         {/* Left Content */}
         <div className="hidden lg:flex flex-1 items-center justify-center p-12 text-white">
           <div className="absolute top-12 left-12 flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/10 backdrop-blur-xl rounded-xl flex items-center justify-center font-bold text-xl border border-white/20">M</div>
+            <img src="/logo.png" alt="Maskan Logo" className="w-10 h-10 object-contain drop-shadow-md brightness-0 invert" />
             <span className="text-2xl font-black tracking-tight text-white/90">Maskan</span>
           </div>
           
@@ -103,7 +103,7 @@ export default function LoginPage() {
         <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
           <div className="w-full max-w-md bg-white/5 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 border border-white/10">
             <div className="lg:hidden mb-8 flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-white font-bold">M</div>
+              <img src="/logo.png" alt="Maskan Logo" className="w-8 h-8 object-contain" />
               <span className="text-xl font-bold text-white">Maskan</span>
             </div>
             
