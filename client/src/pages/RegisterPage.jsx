@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import BackgroundParticles from '../components/BackgroundParticles';
 
 const INTERESTING_FACTS = [
   "Knowledge is the only treasure that grows when shared with others.",
@@ -24,8 +25,6 @@ export default function RegisterPage() {
   const [factIndex, setFactIndex] = useState(0);
   const [animateFact, setAnimateFact] = useState(true);
   const { register } = useAuth();
-  
-  const bgRef = useRef(null);
 
   // Rotate facts every 40 seconds with animation
   useEffect(() => {
@@ -34,19 +33,10 @@ export default function RegisterPage() {
       setTimeout(() => {
         setFactIndex((prev) => (prev + 1) % INTERESTING_FACTS.length);
         setAnimateFact(true);
-      }, 500); // Wait for slide down animation
+      }, 500);
     }, 40000);
     return () => clearInterval(interval);
   }, []);
-
-  // Cursor follow effect
-  const handleMouseMove = (e) => {
-    if (!bgRef.current) return;
-    const { clientX, clientY } = e;
-    const moveX = (clientX - window.innerWidth / 2) / 30;
-    const moveY = (clientY - window.innerHeight / 2) / 30;
-    bgRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,7 +54,7 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface-50 p-6">
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a1f] p-6">
         <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 text-center animate-fade-in-up border border-surface-200">
           <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">✅</div>
           <h1 className="text-2xl font-bold text-surface-900 mb-2">Account Created!</h1>
@@ -81,27 +71,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div onMouseMove={handleMouseMove} className="min-h-screen flex relative overflow-hidden bg-[#0a0a1f]">
-      {/* Dynamic Background with Mouse Follow */}
-      <div 
-        ref={bgRef}
-        className="absolute inset-0 z-0 transition-transform duration-300 ease-out opacity-40"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'hue-rotate(220deg) saturate(1.5)',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a1f] via-transparent to-[#1a1a3a]" />
-      </div>
+    <div className="min-h-screen flex relative overflow-hidden bg-[#050510]">
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#050510] via-[#0a0a25] to-[#1a1a3a] z-0" />
+      <BackgroundParticles />
 
       {/* Content Wrapper */}
       <div className="relative z-10 w-full flex min-h-screen">
         {/* Left Content */}
         <div className="hidden lg:flex flex-1 items-center justify-center p-12 text-white">
-          <div className="absolute top-12 left-12 flex items-center gap-3">
-            <img src="/logo.png" alt="Maskan Logo" className="w-10 h-10 object-contain drop-shadow-md brightness-0 invert" />
+          <div className="absolute top-12 left-12 flex items-center gap-4">
+            <img src="/logo.png" alt="Maskan Logo" className="w-12 h-12 object-contain rounded-full shadow-lg border border-white/10" />
             <span className="text-2xl font-black tracking-tight text-white/90">Maskan</span>
           </div>
           
@@ -121,9 +101,9 @@ export default function RegisterPage() {
 
         {/* Right Form Panel */}
         <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
-          <div className="w-full max-w-md bg-white/10 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 border border-white/10">
-            <div className="lg:hidden mb-8 flex items-center gap-2">
-              <img src="/logo.png" alt="Maskan Logo" className="w-8 h-8 object-contain" />
+          <div className="w-full max-w-md bg-white/5 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 border border-white/10">
+            <div className="lg:hidden mb-8 flex items-center gap-3">
+              <img src="/logo.png" alt="Maskan Logo" className="w-10 h-10 object-contain rounded-full shadow-lg" />
               <span className="text-xl font-bold text-white">Maskan</span>
             </div>
             

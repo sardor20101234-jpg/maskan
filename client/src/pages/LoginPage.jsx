@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import BackgroundParticles from '../components/BackgroundParticles';
 
 const INTERESTING_FACTS = [
   "Did you know? Humans share about 50% of their DNA with bananas!",
@@ -22,8 +23,6 @@ export default function LoginPage() {
   const [animateFact, setAnimateFact] = useState(true);
   const { login } = useAuth();
   const navigate = useNavigate();
-  
-  const bgRef = useRef(null);
 
   // Rotate facts every 40 seconds with animation
   useEffect(() => {
@@ -36,15 +35,6 @@ export default function LoginPage() {
     }, 40000);
     return () => clearInterval(interval);
   }, []);
-
-  // Cursor follow effect
-  const handleMouseMove = (e) => {
-    if (!bgRef.current) return;
-    const { clientX, clientY } = e;
-    const moveX = (clientX - window.innerWidth / 2) / 40;
-    const moveY = (clientY - window.innerHeight / 2) / 40;
-    bgRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,27 +51,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div onMouseMove={handleMouseMove} className="min-h-screen flex relative overflow-hidden bg-[#050510]">
-      {/* Dynamic Background with Mouse Follow */}
-      <div 
-        ref={bgRef}
-        className="absolute inset-0 z-0 transition-transform duration-500 ease-out opacity-30 scale-110"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'hue-rotate(240deg) brightness(0.8)',
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#050510] via-transparent to-[#101030]" />
-      </div>
+    <div className="min-h-screen flex relative overflow-hidden bg-[#050510]">
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#050510] via-[#05051a] to-[#101030] z-0" />
+      <BackgroundParticles />
 
       {/* Content Wrapper */}
       <div className="relative z-10 w-full flex min-h-screen">
         {/* Left Content */}
         <div className="hidden lg:flex flex-1 items-center justify-center p-12 text-white">
-          <div className="absolute top-12 left-12 flex items-center gap-3">
-            <img src="/logo.png" alt="Maskan Logo" className="w-10 h-10 object-contain drop-shadow-md brightness-0 invert" />
+          <div className="absolute top-12 left-12 flex items-center gap-4">
+            <img src="/logo.png" alt="Maskan Logo" className="w-12 h-12 object-contain rounded-full shadow-lg border border-white/10" />
             <span className="text-2xl font-black tracking-tight text-white/90">Maskan</span>
           </div>
           
@@ -102,8 +82,8 @@ export default function LoginPage() {
         {/* Right Form Panel */}
         <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
           <div className="w-full max-w-md bg-white/5 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl p-8 lg:p-12 border border-white/10">
-            <div className="lg:hidden mb-8 flex items-center gap-2">
-              <img src="/logo.png" alt="Maskan Logo" className="w-8 h-8 object-contain" />
+            <div className="lg:hidden mb-8 flex items-center gap-3">
+              <img src="/logo.png" alt="Maskan Logo" className="w-10 h-10 object-contain rounded-full shadow-lg" />
               <span className="text-xl font-bold text-white">Maskan</span>
             </div>
             
@@ -164,7 +144,7 @@ export default function LoginPage() {
                 <label htmlFor="remember-me" className="ml-2 text-xs font-bold text-white/60 cursor-pointer uppercase tracking-wider">Keep me signed in</label>
               </div>
 
-              <button type="submit" disabled={loading} className="w-full py-4 bg-white text-indigo-900 font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 text-xs uppercase tracking-widest">
+              <button type="submit" disabled={loading} className="w-full py-4 bg-white text-indigo-900 font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 text-xs uppercase tracking-widest shadow-xl shadow-white/5">
                 {loading ? 'Authenticating...' : 'Sign In'}
               </button>
             </form>
